@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 public interface ProductService {
 
-    ProductDTO insert(ProductDTO product);
+    ProductDTO insert(ProductDTO productDTO);
 
-    ProductDTO update(Long id, ProductDTO product);
+    ProductDTO update(Long id, ProductDTO productDTO);
 
     void delete(Long id);
 
