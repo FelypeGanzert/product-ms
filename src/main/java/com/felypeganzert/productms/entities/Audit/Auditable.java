@@ -1,4 +1,4 @@
-package com.felypeganzert.productms.entities.Audit;
+package com.felypeganzert.productms.entities.audit;
 
 import java.time.LocalDateTime;
 
@@ -26,5 +26,5 @@ public class Auditable {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
-    
+
 }

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
-import com.felypeganzert.productms.entities.Audit.Auditable;
+import com.felypeganzert.productms.entities.audit.Auditable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class ProductRepositoryAuditTest {
+class ProductRepositoryAuditTest {
 
     @Autowired
     private ProductRepository repository;
@@ -25,7 +25,7 @@ public class ProductRepositoryAuditTest {
 
     @Test
     void deveAtribuirCreatedDateELastModifiedDateAoSalvarUmNovoProdutoValido(){
-        Product p = Product.builder().description("description").name("name").price(new BigDecimal(1)).build();
+        Product p = Product.builder().description("description").name("name").price(BigDecimal.valueOf(1)).build();
 
         p = repository.save(p);
 
@@ -35,7 +35,7 @@ public class ProductRepositoryAuditTest {
 
     @Test
     void deveAtualizarSomenteLastModifiedDateAoAtualizarUmProdutoExistente(){
-        Product p = Product.builder().description("description").name("name").price(new BigDecimal(1)).build();
+        Product p = Product.builder().description("description").name("name").price(BigDecimal.valueOf(1)).build();
         p = repository.save(p);
         LocalDateTime createdDate = p.getCreatedDate();
         LocalDateTime modifiedDate = p.getLastModifiedDate();
