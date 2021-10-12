@@ -3,6 +3,9 @@ package com.felypeganzert.productms.services.impl;
 import static com.felypeganzert.productms.utils.AppConstantes.ID;
 import static com.felypeganzert.productms.utils.AppConstantes.PRODUCT;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.felypeganzert.productms.dtos.ProductDTO;
 import com.felypeganzert.productms.entities.Product;
 import com.felypeganzert.productms.exceptions.RecursoNaoEncontradoException;
@@ -60,6 +63,12 @@ public class ProductServiceImpl implements ProductService{
 
     private Product findProductById(Long id){
         return repository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException(PRODUCT, ID, id));
+    }
+
+    @Override
+    public List<ProductDTO> findAll(){
+        List<Product> list = repository.findAll();
+        return list.stream().map(p -> mapper.toProductDTO(p)).collect(Collectors.toList());
     }
 
     @Override

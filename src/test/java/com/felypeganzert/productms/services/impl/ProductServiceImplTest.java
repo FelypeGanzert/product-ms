@@ -92,7 +92,17 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void deveChamarFindAllDoRepositoryComSucesso() {
+    void deveChamarFindAllDoRepositoryComSucessoAoBuscarTudo() {
+        List<Product> products= Arrays.asList(new Product(), new Product());
+        Mockito.when(repository.findAll()).thenReturn(products);
+
+        service.findAll();
+        
+        Mockito.verify(repository, times(1)).findAll();
+    }
+
+    @Test
+    void deveChamarFindAllDoRepositoryComSucessoAoBucasPaginado() {
         PageRequest paginacao = PageRequest.of(1, 10);
         List<Product> products= Arrays.asList(new Product(), new Product());
         Page<Product> productsPaged = new PageImpl<>(products, paginacao, products.size());

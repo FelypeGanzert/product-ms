@@ -1,5 +1,7 @@
 package com.felypeganzert.productms.services;
 
+import java.util.List;
+
 import com.felypeganzert.productms.dtos.ProductDTO;
 
 import org.springframework.data.domain.Page;
@@ -16,6 +18,8 @@ public interface ProductService {
     void delete(Long id);
 
     ProductDTO findById(Long id);
+
+    List<ProductDTO> findAll();
 
     Page<ProductDTO> findAllPaged(PageRequest pageRequest);
 
