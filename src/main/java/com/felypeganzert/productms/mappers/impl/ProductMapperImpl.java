@@ -25,5 +25,12 @@ public class ProductMapperImpl implements ProductMapper{
                     .price(product.getPrice())
                     .build();
     }
+
+    @Override
+    public void parseValuesToProduct(ProductDTO dto, Product product) {
+        product.setName(dto.getName());
+        product.setDescription(dto.getDescription());
+        product.setPrice(dto.getPrice());
+    }
     
 }
