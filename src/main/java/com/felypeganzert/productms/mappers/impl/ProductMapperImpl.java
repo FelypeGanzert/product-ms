@@ -4,6 +4,9 @@ import com.felypeganzert.productms.dtos.ProductDTO;
 import com.felypeganzert.productms.entities.Product;
 import com.felypeganzert.productms.mappers.ProductMapper;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class ProductMapperImpl implements ProductMapper{
 
     @Override
