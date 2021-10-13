@@ -2,6 +2,7 @@ package com.felypeganzert.productms.entities;
 
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -37,6 +38,7 @@ public class Product extends Auditable{
     private String name;
 
     @NotBlank(message = "Description é obrigatório")
+    @Column(columnDefinition="TEXT")
     private String description;
 
     @NotNull
