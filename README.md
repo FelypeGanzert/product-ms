@@ -34,6 +34,12 @@ Para rodar local basta rodar o comando abaixo na raiz do projeto:
 
     ./mvnw spring-boot:run
 
+Como atualmente está definido em application.properties:
+
+    spring.profiles.active=test
+
+Será subida a aplicação localmente utilizando o Bancho H2.
+
 O projeto ficará então acessível em:
 
     http://localhost:9999/products
