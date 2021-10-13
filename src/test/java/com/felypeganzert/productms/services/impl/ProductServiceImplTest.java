@@ -14,6 +14,7 @@ import com.felypeganzert.productms.entities.Product;
 import com.felypeganzert.productms.exceptions.RecursoNaoEncontradoException;
 import com.felypeganzert.productms.mappers.impl.ProductMapperImpl;
 import com.felypeganzert.productms.repositories.ProductRepository;
+import com.felypeganzert.productms.utils.SearchParam;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -99,6 +100,15 @@ class ProductServiceImplTest {
         service.findAll();
         
         Mockito.verify(repository, times(1)).findAll();
+    }
+
+    @Test
+    void deveChamarFindByParamsDoRepositoryComSucesso() {
+        SearchParam searchParam = new SearchParam();
+        
+        service.findAllWithParameters(searchParam);
+
+        Mockito.verify(repository, times(1)).findByParams(ArgumentMatchers.any(SearchParam.class));
     }
 
     @Test
