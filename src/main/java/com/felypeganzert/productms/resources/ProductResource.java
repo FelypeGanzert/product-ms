@@ -6,6 +6,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.felypeganzert.productms.dtos.ProductDTO;
+import com.felypeganzert.productms.entities.Product_;
 import com.felypeganzert.productms.services.ProductService;
 import com.felypeganzert.productms.utils.SearchParam;
 
@@ -87,7 +88,7 @@ public class ProductResource {
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size){
         
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, Product_.NAME);
 
         return service.findAllPaged(pageRequest);
     }
