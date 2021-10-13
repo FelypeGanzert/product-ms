@@ -15,6 +15,7 @@ public class RecursoNaoEncontradoException extends RuntimeException {
 		this.valorCampo = valorCampo;
 	}
 
+    @Override
 	public String getMessage(){
 		return String.format("%s não encontrado com %s: '%s'", nomeRecurso, nomeCampo, valorCampo);
 	}
