@@ -15,10 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ProductRepositoryTest {
+class ProductCustomRepositoryImplTest {
 
     @Autowired
-    private ProductRepository repository;
+    private ProductCustomRepositoryImpl repository;
+
+    @Autowired
+    private ProductRepository repositoryGeral;
 
     private final List<Product> products = List.of(new Product(0L, "caneta", "azul", BigDecimal.valueOf(20)),
             new Product(0L, "guarda-chuva", "o mais grande do universo", BigDecimal.valueOf(75)),
@@ -30,7 +33,7 @@ class ProductRepositoryTest {
 
     @BeforeEach
     void destruir() {
-        repository.deleteAll();
+        repositoryGeral.deleteAll();
     }
 
     private void verificarSeQtdEsperadaEhValida(Long qtdEsperada) {
@@ -46,7 +49,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Deve trazer produtos contendo texto no nome ou na descrição")
     void deveBuscarProdutosContendoTextoEmNameOuEmDescription() {
-        repository.saveAll(products);
+        repositoryGeral.saveAll(products);
 
         SearchParam searchParam = SearchParam.builder().q("ROSA").build();
         Long qtdEsperada = products.stream().filter(
@@ -63,7 +66,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Deve trazer produtos acima de determinado preço")
     void deveBuscarProdutosComValorMinimo() {
-        repository.saveAll(products);
+        repositoryGeral.saveAll(products);
 
         SearchParam searchParam = SearchParam.builder().minPrice(BigDecimal.valueOf(50)).build();
         Long qtdEsperada = products.stream().filter(p -> p.getPrice().compareTo(searchParam.getMinPrice()) >= 0).count();
@@ -77,7 +80,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Deve trazer produtos abaixo de determinado preço")
     void deveBuscarProdutosComValorMaximo() {
-        repository.saveAll(products);
+        repositoryGeral.saveAll(products);
 
         SearchParam searchParam = SearchParam.builder().maxPrice(BigDecimal.valueOf(50)).build();
         Long qtdEsperada = products.stream().filter(p -> p.getPrice().compareTo(searchParam.getMaxPrice()) <= 0).count();
@@ -91,7 +94,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Deve trazer produtos entre determinados valores")
     void deveBuscarProdutosComValorEntre() {
-        repository.saveAll(products);
+        repositoryGeral.saveAll(products);
 
         SearchParam searchParam = SearchParam.builder()
                                             .minPrice(BigDecimal.valueOf(50))
@@ -110,7 +113,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Deve trazer produtos entre determinados valores com texto no nome ou descrição")
     void deveBuscarProdutosContendoTextoEmNameOuEmDescriptionEValorEntre() {
-        repository.saveAll(products);
+        repositoryGeral.saveAll(products);
 
         SearchParam searchParam = SearchParam.builder()
                                             .q("ROSA")
