@@ -24,47 +24,54 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/products")
+@Api("Product MS")
 public class ProductResource {
 
     private final ProductService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @ApiOperation(value = "Criação de um produto")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Produto criado")
+    })
     public ProductDTO insert(@RequestBody @Valid ProductDTO productDTO){
         return service.insert(productDTO);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Atualização de um produto")
     public ProductDTO update(@PathVariable Long id, @RequestBody @Valid ProductDTO productDTO){
         return service.update(id, productDTO);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable Long id){
-        service.delete(id);
-    }
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Busca de um produto por ID")
     public ProductDTO findById(@PathVariable Long id){
         return service.findById(id);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Lista de produtos")
     public List<ProductDTO> findAll(){
         return service.findAll();
     }
 
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Lista de produtos filtrados")
     public List<ProductDTO> findAllWithParameters(
         final @RequestParam(value = "q", required = false) String q,
         final @RequestParam(value = "min_price", required = false) BigDecimal minPrice,
@@ -75,6 +82,7 @@ public class ProductResource {
 
     @GetMapping("/paged")
     @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Lista de produtos paginados")
     public Page<ProductDTO> findAllPaged(
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size){
@@ -82,6 +90,17 @@ public class ProductResource {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "name");
 
         return service.findAllPaged(pageRequest);
+    }
+
+    
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    @ApiOperation(value = "Deleção de um produto")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Produto deletado")
+    })
+    public void delete(@PathVariable Long id){
+        service.delete(id);
     }
     
 }
