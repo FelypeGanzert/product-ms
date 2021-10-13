@@ -3,6 +3,7 @@ package com.felypeganzert.productms.services.impl;
 import static com.felypeganzert.productms.utils.AppConstantes.ID;
 import static com.felypeganzert.productms.utils.AppConstantes.PRODUCT;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,12 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public List<ProductDTO> findAll(){
         List<Product> list = repository.findAll();
+        return list.stream().map(p -> mapper.toProductDTO(p)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> findAllWithParameters(String text, BigDecimal minPrice, BigDecimal maxPrice){
+        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(text, text, minPrice, maxPrice);
         return list.stream().map(p -> mapper.toProductDTO(p)).collect(Collectors.toList());
     }
 
