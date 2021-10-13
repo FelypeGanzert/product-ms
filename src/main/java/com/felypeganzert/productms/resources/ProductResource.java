@@ -1,5 +1,6 @@
 package com.felypeganzert.productms.resources;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -55,10 +56,20 @@ public class ProductResource {
         return service.findById(id);
     }
 
-    @GetMapping()
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ProductDTO> findAllPaged(){
+    public List<ProductDTO> findAll(){
         return service.findAll();
+    }
+
+    @GetMapping("/search")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ProductDTO> findAllWithParameters(
+        final @RequestParam(value = "q", required = false) String text,
+        final @RequestParam(value = "min_price", required = false) BigDecimal minPrice,
+        final @RequestParam(value = "max_price", required = false) BigDecimal maxPrice
+    ){
+        return service.findAllWithParameters(text, minPrice, maxPrice);
     }
 
     @GetMapping("/paged")
