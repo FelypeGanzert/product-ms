@@ -23,7 +23,7 @@ Mesmo sem tantas regras de negócio a aplicação foi desenvolvida tendo a cober
 Foi feito o deploy da aplicação no Heroku, a documentação pode ser acessada em:
 https://felype-ganzert-products-ms.herokuapp.com/swagger-ui/#/
 
-## 🧪 Rodas os testes
+## 🧪 Rodar os testes local
 (É necessário ter o Maven instalado e configurado localmente)
 
     mvn test
