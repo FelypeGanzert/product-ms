@@ -1,4 +1,4 @@
-package com.felypeganzert.productms.entities.audit;
+package com.felypeganzert.productms.entities.auditable;
 
 import java.time.LocalDateTime;
 
