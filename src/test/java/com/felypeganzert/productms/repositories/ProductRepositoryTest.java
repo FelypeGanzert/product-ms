@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.felypeganzert.productms.entities.Product;
+import com.felypeganzert.productms.utils.SearchParam;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -43,53 +44,17 @@ class ProductRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve trazer produtos contendo texto no nome")
-    void deveBuscarProdutosContendoTextoEmName() {
-        repository.saveAll(products);
-
-        String name = "ROSA";
-        String description = null;
-        BigDecimal minPrice = null;
-        BigDecimal maxPrice = null;
-        Long qtdEsperada = products.stream().filter(p -> containsIgnoreCase(p.getName(), name)).count();
-
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
-
-        verificarSeQtdEsperadaEhValida(qtdEsperada);
-        assertThat(list).hasSize(qtdEsperada.intValue());
-    }
-
-    @Test
-    @DisplayName("Deve trazer produtos contendo texto na descrição")
-    void deveBuscarProdutosContendoTextoEmDescription() {
-        repository.saveAll(products);
-
-        String name = null;
-        String description = "ROSA";
-        BigDecimal minPrice = null;
-        BigDecimal maxPrice = null;
-        Long qtdEsperada = products.stream().filter(p -> containsIgnoreCase(p.getDescription(), description)).count();
-
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
-
-        verificarSeQtdEsperadaEhValida(qtdEsperada);
-        assertThat(list).hasSize(qtdEsperada.intValue());
-    }
-
-    @Test
     @DisplayName("Deve trazer produtos contendo texto no nome ou na descrição")
     void deveBuscarProdutosContendoTextoEmNameOuEmDescription() {
         repository.saveAll(products);
 
-        String name = "CHUVA";
-        String description = "ANIME";
-        BigDecimal minPrice = null;
-        BigDecimal maxPrice = null;
+        SearchParam searchParam = SearchParam.builder().q("ROSA").build();
         Long qtdEsperada = products.stream().filter(
-                    p -> containsIgnoreCase(p.getName(), name) || containsIgnoreCase(p.getDescription(), description))
-                .count();
+                    p -> containsIgnoreCase(p.getName(), searchParam.getQ())
+                        || containsIgnoreCase(p.getDescription(), searchParam.getQ())
+                ).count();
 
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
+        List<Product> list = repository.findByParams(searchParam);
 
         verificarSeQtdEsperadaEhValida(qtdEsperada);
         assertThat(list).hasSize(qtdEsperada.intValue());
@@ -100,13 +65,10 @@ class ProductRepositoryTest {
     void deveBuscarProdutosComValorMinimo() {
         repository.saveAll(products);
 
-        String name = null;
-        String description = null;
-        BigDecimal minPrice = BigDecimal.valueOf(50);
-        BigDecimal maxPrice = null;
-        Long qtdEsperada = products.stream().filter(p -> p.getPrice().compareTo(minPrice) >= 0).count();
+        SearchParam searchParam = SearchParam.builder().minPrice(BigDecimal.valueOf(50)).build();
+        Long qtdEsperada = products.stream().filter(p -> p.getPrice().compareTo(searchParam.getMinPrice()) >= 0).count();
 
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
+        List<Product> list = repository.findByParams(searchParam);
 
         verificarSeQtdEsperadaEhValida(qtdEsperada);
         assertThat(list).hasSize(qtdEsperada.intValue());
@@ -117,13 +79,10 @@ class ProductRepositoryTest {
     void deveBuscarProdutosComValorMaximo() {
         repository.saveAll(products);
 
-        String name = null;
-        String description = null;
-        BigDecimal minPrice = null;
-        BigDecimal maxPrice = BigDecimal.valueOf(50);
-        Long qtdEsperada = products.stream().filter(p -> p.getPrice().compareTo(maxPrice) <= 0).count();
+        SearchParam searchParam = SearchParam.builder().maxPrice(BigDecimal.valueOf(50)).build();
+        Long qtdEsperada = products.stream().filter(p -> p.getPrice().compareTo(searchParam.getMaxPrice()) <= 0).count();
 
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
+        List<Product> list = repository.findByParams(searchParam);
 
         verificarSeQtdEsperadaEhValida(qtdEsperada);
         assertThat(list).hasSize(qtdEsperada.intValue());
@@ -134,61 +93,18 @@ class ProductRepositoryTest {
     void deveBuscarProdutosComValorEntre() {
         repository.saveAll(products);
 
-        String name = null;
-        String description = null;
-        BigDecimal minPrice = BigDecimal.valueOf(50);
-        BigDecimal maxPrice = BigDecimal.valueOf(100);
+        SearchParam searchParam = SearchParam.builder()
+                                            .minPrice(BigDecimal.valueOf(50))
+                                            .maxPrice(BigDecimal.valueOf(100)).build();
         Long qtdEsperada = products.stream()
-                .filter(p -> p.getPrice().compareTo(minPrice) >= 0 && p.getPrice().compareTo(maxPrice) <= 0).count();
+                .filter(p -> p.getPrice().compareTo(searchParam.getMinPrice()) >= 0
+                                && p.getPrice().compareTo(searchParam.getMaxPrice()) <= 0
+                ).count();
 
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
+        List<Product> list = repository.findByParams(searchParam);
 
         verificarSeQtdEsperadaEhValida(qtdEsperada);
         assertThat(list).hasSize(qtdEsperada.intValue());
-    }
-
-    @Test
-    @DisplayName("Deve trazer produtos acima de determinado valor com texto no nome ou descrição")
-    void deveBuscarProdutosContendoTextoEmNameOuEmDescriptionEValorMinimo() {
-        repository.saveAll(products);
-
-        String name = "ROSA";
-        String description = "ROSA";
-        BigDecimal minPrice = BigDecimal.valueOf(70);
-        BigDecimal maxPrice = null;
-
-        Long quantidadeEsperada = products.stream()
-                .filter(p ->
-                    (containsIgnoreCase(p.getName(), name) || containsIgnoreCase(p.getDescription(), description))
-                    && p.getPrice().compareTo(minPrice) >= 0
-                ).count();
-
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
-
-        verificarSeQtdEsperadaEhValida(quantidadeEsperada);
-        assertThat(list).hasSize(quantidadeEsperada.intValue());
-    }
-
-    @Test
-    @DisplayName("Deve trazer produtos abaixo de determinado valor com texto no nome ou descrição")
-    void deveBuscarProdutosContendoTextoEmNameOuEmDescriptionEValorMaximo() {
-        repository.saveAll(products);
-
-        String name = "BLUSA";
-        String description = "BLUSA";
-        BigDecimal minPrice = null;
-        BigDecimal maxPrice = BigDecimal.valueOf(30);
-
-        Long quantidadeEsperada = products.stream()
-                .filter(p ->
-                    (containsIgnoreCase(p.getName(), name) || containsIgnoreCase(p.getDescription(), description))
-                        && p.getPrice().compareTo(maxPrice) <= 0
-                ).count();
-
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
-
-        verificarSeQtdEsperadaEhValida(quantidadeEsperada);
-        assertThat(list).hasSize(quantidadeEsperada.intValue());
     }
 
     @Test
@@ -196,18 +112,18 @@ class ProductRepositoryTest {
     void deveBuscarProdutosContendoTextoEmNameOuEmDescriptionEValorEntre() {
         repository.saveAll(products);
 
-        String name = "ROSA";
-        String description = "ROSA";
-        BigDecimal minPrice = BigDecimal.valueOf(60);
-        BigDecimal maxPrice = BigDecimal.valueOf(100);
-
+        SearchParam searchParam = SearchParam.builder()
+                                            .q("ROSA")
+                                            .minPrice(BigDecimal.valueOf(60))
+                                            .maxPrice(BigDecimal.valueOf(100)).build();
         Long quantidadeEsperada = products.stream()
                 .filter(p -> 
-                    (containsIgnoreCase(p.getName(), name) || containsIgnoreCase(p.getDescription(), description))
-                        && (p.getPrice().compareTo(minPrice) >= 0 && p.getPrice().compareTo(maxPrice) <= 0)
+                    (containsIgnoreCase(p.getName(), searchParam.getQ())
+                        || containsIgnoreCase(p.getDescription(),  searchParam.getQ()))
+                    && (p.getPrice().compareTo(searchParam.getMinPrice()) >= 0 && p.getPrice().compareTo(searchParam.getMaxPrice()) <= 0)
                 ).count();
 
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(name, description, minPrice, maxPrice);
+        List<Product> list = repository.findByParams(searchParam);
 
         verificarSeQtdEsperadaEhValida(quantidadeEsperada);
         assertThat(list).hasSize(quantidadeEsperada.intValue());

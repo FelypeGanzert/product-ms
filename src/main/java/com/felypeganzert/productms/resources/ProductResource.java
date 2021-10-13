@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import com.felypeganzert.productms.dtos.ProductDTO;
 import com.felypeganzert.productms.services.ProductService;
+import com.felypeganzert.productms.utils.SearchParam;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -65,11 +66,11 @@ public class ProductResource {
     @GetMapping("/search")
     @ResponseStatus(HttpStatus.OK)
     public List<ProductDTO> findAllWithParameters(
-        final @RequestParam(value = "q", required = false) String text,
+        final @RequestParam(value = "q", required = false) String q,
         final @RequestParam(value = "min_price", required = false) BigDecimal minPrice,
         final @RequestParam(value = "max_price", required = false) BigDecimal maxPrice
     ){
-        return service.findAllWithParameters(text, minPrice, maxPrice);
+        return service.findAllWithParameters(new SearchParam(q, minPrice, maxPrice));
     }
 
     @GetMapping("/paged")

@@ -3,7 +3,6 @@ package com.felypeganzert.productms.services.impl;
 import static com.felypeganzert.productms.utils.AppConstantes.ID;
 import static com.felypeganzert.productms.utils.AppConstantes.PRODUCT;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +12,7 @@ import com.felypeganzert.productms.exceptions.RecursoNaoEncontradoException;
 import com.felypeganzert.productms.mappers.ProductMapper;
 import com.felypeganzert.productms.repositories.ProductRepository;
 import com.felypeganzert.productms.services.ProductService;
+import com.felypeganzert.productms.utils.SearchParam;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -73,8 +73,8 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public List<ProductDTO> findAllWithParameters(String text, BigDecimal minPrice, BigDecimal maxPrice){
-        List<Product> list = repository.findByNameOrDescriptionAndPriceBetween(text, text, minPrice, maxPrice);
+    public List<ProductDTO> findAllWithParameters(SearchParam searchParam){
+        List<Product> list = repository.findByParams(searchParam);
         return list.stream().map(p -> mapper.toProductDTO(p)).collect(Collectors.toList());
     }
 
