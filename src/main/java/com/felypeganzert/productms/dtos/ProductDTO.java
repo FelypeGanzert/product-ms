@@ -25,7 +25,7 @@ public class ProductDTO {
     @NotBlank(message = "Description é obrigatório")
     private String description;
 
-    @NotNull
-    @Positive( message = "Preço deve ser positivo")
+    @NotNull(message = "Preço deve ser positivo")
+    @Positive(message = "Preço deve ser positivo")
     private BigDecimal price;
 }
